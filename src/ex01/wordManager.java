@@ -20,7 +20,7 @@ public class wordManager {
 	}
 
 	public void input(String eng, String kor) { // 값을 입력하는 부분
-	
+	list.put(eng, kor);
 		imp.input(eng, kor);
 
 	}
@@ -37,7 +37,7 @@ public class wordManager {
 
 	public void clearAll() {
 
-
+		list.clear();
 		imp.clear();
 	}
 
@@ -53,7 +53,8 @@ public class wordManager {
 		}
 		return tempList;
 	}
-	public void modify(String mkor, String eng) {
+	public void modify(String eng, String mkor) {
 		imp.modify(mkor, eng);
+		list.put(eng, mkor);
 	}
 }

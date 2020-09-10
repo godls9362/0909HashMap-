@@ -1,6 +1,15 @@
 package userGUI;
-
 import java.awt.BorderLayout;
+import java.awt.Button;
+import java.awt.Color;
+import java.awt.Frame;
+import java.awt.Label;
+import java.awt.Panel;
+import java.awt.event.WindowAdapter;
+import java.awt.event.WindowEvent;
+
+import javax.swing.BoxLayout;
+import javax.swing.JTextField;
 import java.awt.Button;
 import java.awt.Color;
 import java.awt.Frame;
@@ -13,6 +22,7 @@ import javax.swing.BoxLayout;
 import javax.swing.JTextField;
 
 public class MainFrame extends Frame{  // Frame 컨테이너/ 레이아웃 (border layout, flow Layout)
+	
 	Label title = new Label("나의 첫번째 java GUI interface");  // 컴포넌트
 	Label east = new Label("east");// 컴포넌트
 	Label center = new Label("Center");// 컴포넌트
