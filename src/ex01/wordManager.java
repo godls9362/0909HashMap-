@@ -4,56 +4,56 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Set;
 
-import DAO.DAOword;
-import DTO.wordDTO;
+import INF.wordINFImp;
 
 public class wordManager {
-	private HashMap<String, String> list = new HashMap<String, String>();
-	private DAOword wordDAO = DAOword.getinstance();
+	HashMap<String, String> list = null; //새로만들면 또 새로만들어지기 때문에 같은 리스트가 아님
+	private wordINFImp imp = new wordINFImp();
 
 	public wordManager() {
 		init();
+
 	}
 
 	public void init() {
-		list = wordDAO.selectAll();
+		list = imp.output();
 	}
 
-	public void input(String eng, String kor) { //값을 입력하는 부분
-		if (list.put(eng,kor)!=null) {
-			wordDAO.updateKor(kor, eng);
-		} else {
-			wordDAO.inputWord(eng, kor);
-		}
+	public void input(String eng, String kor) { // 값을 입력하는 부분
+	
+		imp.input(eng, kor);
+
 	}
 
 	public String searchOne(String engW) {
-		wordDAO.searchOne(engW);
 		return list.get(engW);
 	}
 
 	public void remove(String engW) {
 		list.remove(engW);
-		wordDAO.deleteOne(engW);
+		imp.remove(engW);
+
 	}
 
 	public void clearAll() {
-		wordDAO.clearAll();
-		list.clear();
+
+
+		imp.clear();
 	}
 
 	public HashMap<String, String> searchTwo(String some) {
 		HashMap<String, String> tempList = new HashMap<String, String>();
-		HashMap<String, String> List = wordDAO.selectAll();
-		Set<String> keys = List.keySet();
+		Set<String> keys = list.keySet();
 		Iterator<String> it = keys.iterator();
 		while (it.hasNext()) {
 			String key = it.next();
 			if (key.indexOf(some) != -1) {
-				tempList.put(key, List.get(key));
+				tempList.put(key, list.get(key));
 			}
 		}
 		return tempList;
 	}
-
+	public void modify(String mkor, String eng) {
+		imp.modify(mkor, eng);
+	}
 }

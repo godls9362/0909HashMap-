@@ -1,58 +1,66 @@
 package INF;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
-import java.util.Scanner;
 import java.util.Set;
 
 import DAO.DAOword;
+import DTO.wordDTO;
+import ex01.wordManager;
 
 public class wordINFImp implements wordINF {
-	private DAOword wordDao=DAOword.getinstance();
-	private Scanner in=new Scanner(System.in);
+	private DAOword wordDao = DAOword.getinstance();
+	private wordDTO dto = new wordDTO();
+	
+
 	@Override
-	public void input() {
-		System.out.println("단어입력을 시작합니다.");
-		System.out.println("-------------------");
-		System.out.println("영어단어를 입력해주세요.");
-		String key=in.nextLine();
-		System.out.println("뜻을 입력해주세요.");
-		System.out.println("-------------------");
-		String value=in.nextLine();
-		wordDao.inputWord(key, value);
-		System.out.println("입력되었습니다.");
-		System.out.println("-------------------");
+	public void input(String eng, String kor) {
+		dto.setEng(eng);
+		dto.setKor(kor);
+		wordDao.inputWord(dto);
 		
+
 	}
 
 	@Override
-	public void output() {
+	public HashMap<String, String> output() {
+		ArrayList<wordDTO> list = wordDao.selectAll();
 		HashMap<String, String> wList = new HashMap<String, String>();
-		wList=wordDao.selectAll();
-		Set<String> keys=wList.keySet();
-		Iterator<String> it=keys.iterator();
-		while(it.hasNext()) {
-			String key=it.next();
-			String value=wList.get(key);
-			System.out.println("(영어단어 :"+key+"/ 뜻:"+value+")");
+		for (int i = 0; i < list.size(); i++) {
+			wList.put(list.get(i).getEng(), list.get(i).getKor());
 		}
+		Set<String> keys = wList.keySet();
+		Iterator<String> it = keys.iterator();
+		while (it.hasNext()) {
+			String key = it.next();
+			String value = wList.get(key);
+			System.out.println("(영단어 :"+key +", 뜻 :"+value+")");
+		}
+		return wList;
 	}
 
 	@Override
-	public void remove() {
+	public void remove(String eng) {
 		System.out.println("삭제하실 영어단어를 입력하세요.");
-		wordDao.deleteOne(in.nextLine());
+		dto.setEng(eng);
+		wordDao.deleteOne(dto);
 		System.out.println("삭제되었습니다.");
 	}
 
 	@Override
-	public void modify() {
+	public void modify(String mkor, String eng) {
 		System.out.println("수정하실 영어단어 뜻을 입력해주세요.");
-		String k=in.nextLine();
+		dto.setKor(mkor);
 		System.out.println("영단어를 입력해주세요");
-		String m=in.nextLine();
-		wordDao.updateKor(k, m);
+		dto.setEng(eng);
+		wordDao.updateKor(dto);
 		System.out.println("수정되었습니다.");
 	}
-	
+
+	@Override
+	public void clear() {
+		wordDao.clearAll();
+	}
+
 }

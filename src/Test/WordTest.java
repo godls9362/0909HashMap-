@@ -8,50 +8,49 @@ import org.junit.Before;
 import org.junit.Test;
 
 import DAO.DAOword;
-import DTO.wordDTO;
+import INF.wordINFImp;
+import ex01.wordManager;
 
 public class WordTest {
 
-	private DAOword w = null;
+	private wordManager m = null;
+	private wordINFImp p=new wordINFImp();
+	private DAOword w=DAOword.getinstance();
 
 	@Before
 	public void a() {
-		w = DAOword.getinstance();
+		m = new wordManager();
 	}
 
 	@Test
-	public void input() { // 단어등록하기
-		w.inputWord("apple","사과");
-		w.inputWord("cuteOne", "도윤");
+	public void input() { // 해쉬에 저장하기
+		m.input("melon", "메론");
+		m.input("cup", "컵");
+		m.input("song", "노래");
+		m.input("love", "사랑");
+		m.input("cute", "귀여운");
+		
 	}
 
-	@Test
-	public void remove() { // Key를 입력해 단어삭제하기
-		// apple을 삭제하세요
-		w.deleteOne("apple");
 
+	@Test
+	public void remove() {
+		m.remove("melon");
 	}
 
 	@Test
 	public void searchLv1() { // 단어 전체 같은거 가져오기.
 		// 포함된 단어는 찾을 수 없다
-		HashMap<String, String> wList = new HashMap<String, String>();
-		wList = w.searchOne("love");
-		Set<String> keys = wList.keySet();
-		Iterator<String> it = keys.iterator();
-		while (it.hasNext()) {
-			String key = it.next();
-			String value = wList.get(key);
-			System.out.println("(" + key + "," + value + ")");
-		}
 
+		String k=m.searchOne("brasil");
+		System.out.println(k);
 	}
 
 	@Test
 	public void searchLv2() { // 입력하는 글자가 포함된 단어 가져오기.
 		// 포함된 단어도 찾을 수 있다.
 		HashMap<String, String> wList = new HashMap<String, String>();
-		wList = w.selectInc("a");
+		wList = m.searchTwo("o");
 		Set<String> keys = wList.keySet();
 		Iterator<String> it = keys.iterator();
 		while (it.hasNext()) {
@@ -63,37 +62,17 @@ public class WordTest {
 
 	@Test
 	public void selectAll() { // 전체보기
-		HashMap<String, String> wList = new HashMap<String, String>();
-		wList = w.selectAll();
-		Set<String> keys = wList.keySet();
-		Iterator<String> it = keys.iterator();
-		while (it.hasNext()) {
-			String key = it.next();
-			String value = wList.get(key);
-			System.out.println("(" + key + "," + value + ")");
-		}
-
+		HashMap<String, String> wList = p.output();
+		System.out.println(wList);
 	}
 
 	@Test
 	public void clear() { // 전체삭제
-		HashMap<String, String> wList = new HashMap<String, String>();
-		w.clearAll();
-		wList = w.selectAll();
-
+		m.clearAll();
 	}
 
 	@Test
 	public void modify() { // 단어수정하기.
-		w.updateKor("김도윤", "love");
-		HashMap<String, String> wList = new HashMap<String, String>();
-		wList = w.selectAll();
-		Set<String> keys = wList.keySet();
-		Iterator<String> it = keys.iterator();
-		while (it.hasNext()) {
-			String key = it.next();
-			String value = wList.get(key);
-			System.out.println("(" + key + "," + value + ")");
-		}
+		p.modify("김도윤", "cute");
 	}
 }

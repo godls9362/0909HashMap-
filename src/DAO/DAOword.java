@@ -1,6 +1,7 @@
 package DAO;
 //DAO
 
+import java.util.ArrayList;
 import java.util.HashMap;
 
 import DTO.wordDTO;
@@ -8,7 +9,6 @@ import DTO.wordDTO;
 
 
 public class DAOword extends DAOBase {
-	private HashMap<String, String> wList = new HashMap<String, String>();
 	private DAOword() {
 	}
 	public static DAOword wmdao = null;
@@ -21,14 +21,14 @@ public class DAOword extends DAOBase {
 	}
 
 
-	public void inputWord(String eng,String kor) {
+	public void inputWord(wordDTO dto) {
 		String sql = "insert into test values (?,?)";
 		ppst = null;
 		if (connect() != null) {
 			try {
 				ppst = conn.prepareStatement(sql);
-				ppst.setString(1, eng);
-				ppst.setString(2, kor);
+				ppst.setString(1, dto.getEng());
+				ppst.setString(2, dto.getKor());
 				ppst.executeUpdate();
 			} catch (Exception e) {
 			} finally {
@@ -37,14 +37,14 @@ public class DAOword extends DAOBase {
 		}
 	}
 
-	public void deleteOne(String engW) {
+	public void deleteOne(wordDTO eng) {
 
 		String sql = "delete from test where eng=?";
 		ppst = null;
 		if (connect() != null) {
 			try {
 				ppst = conn.prepareStatement(sql);
-				ppst.setString(1, engW);
+				ppst.setString(1, eng.getEng());
 				ppst.executeUpdate();
 			} catch (Exception e) {
 				// TODO: handle exception
@@ -54,16 +54,20 @@ public class DAOword extends DAOBase {
 		}
 	}
 
-	public HashMap<String, String> searchOne(String  engW) {
+	public ArrayList<wordDTO> searchOne(wordDTO eng) {
 		String sql = "select * from test where eng=?";
 		ppst = null;
+		ArrayList<wordDTO> wList=new ArrayList<>();
 		if (connect() != null) {
 			try {
 				ppst = conn.prepareStatement(sql);
-				ppst.setString(1, engW);
+				ppst.setString(1, eng.getEng());
 				rs = ppst.executeQuery();
 				while (rs.next()) {
-					wList.put(rs.getString("eng"), rs.getString("kor"));
+					wordDTO temp=new wordDTO();
+					temp.setEng(rs.getString("eng"));
+					temp.setKor(rs.getString("kor"));
+					wList.add(temp);
 				}
 			} catch (Exception e) {
 				// TODO: handle exception
@@ -72,17 +76,21 @@ public class DAOword extends DAOBase {
 		return wList;
 	}
 
-	public HashMap<String, String> selectInc(String name) {
+	public ArrayList<wordDTO> selectInc(String word) {
 		String sql = "select * from test where eng like ?";
+		ArrayList<wordDTO> wList=new ArrayList<>();
 		ppst = null;
 		rs = null;
 		if (connect() != null) {
 			try {
 				ppst = conn.prepareStatement(sql);
-				ppst.setString(1, "%" + name + "%");
+				ppst.setString(1, "%" + word + "%");
 				rs = ppst.executeQuery();
 				while (rs.next()) {
-					wList.put(rs.getString("eng"), rs.getString("kor"));
+					wordDTO temp=new wordDTO();
+					temp.setEng(rs.getString("eng"));
+					temp.setKor(rs.getString("kor"));
+					wList.add(temp);
 				}
 			} catch (Exception e) {
 				// TODO: handle exception
@@ -90,7 +98,8 @@ public class DAOword extends DAOBase {
 		}
 		return wList;
 	}
-	public HashMap<String, String> selectAll() {
+	public ArrayList<wordDTO> selectAll() {
+		ArrayList<wordDTO> wList=new ArrayList<>();
 		String sql = "select * from test";
 		st = null;
 		rs = null;
@@ -99,7 +108,10 @@ public class DAOword extends DAOBase {
 				st = conn.createStatement();
 				rs = st.executeQuery(sql);
 				while (rs.next()) {
-					wList.put(rs.getString("eng"), rs.getString("kor"));
+					wordDTO temp=new wordDTO();
+					temp.setEng(rs.getString("eng"));
+					temp.setKor(rs.getString("kor"));
+					wList.add(temp);
 				}
 			} catch (Exception e) {
 				// TODO: handle exception
@@ -124,14 +136,14 @@ public class DAOword extends DAOBase {
 		}
 	}
 	
-	public void updateKor(String korW,String engW) {
+	public void updateKor(wordDTO dto) {
 	String sql="update test set kor=? where eng=?";
 	ppst=null;
 	if(connect()!=null) {
 		try {
 			ppst=conn.prepareStatement(sql);
-			ppst.setString(1, korW);
-			ppst.setString(2, engW);
+			ppst.setString(1, dto.getKor());
+			ppst.setString(2, dto.getEng());
 			ppst.executeUpdate();
 		} catch (Exception e) {
 			// TODO: handle exception
